@@ -114,26 +114,26 @@ list(APPEND deps
   ${LCM_LIBRARIES}
   )
 
-
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CATKIN_DEVEL_PREFIX}/lib/oscilloscope/)
 add_executable(signal-scope ${srcs})
 target_link_libraries(signal-scope ${deps})
 
+if(NOT CATKIN_CALL)
+  pods_install_headers(
+    curvedata.h
+    lcmthread.h
+    mainwindow.h
+    plot.h
+    plotwidget.h
+    samplingthread.h
+    selectsignaldialog.h
+    setscaledialog.h
+    signaldata.h
+    signaldescription.h
+    signalhandler.h
+    ${python_moc_srcs}
+    DESTINATION signal_scope)
 
-pods_install_headers(
-  curvedata.h
-  lcmthread.h
-  mainwindow.h
-  plot.h
-  plotwidget.h
-  samplingthread.h
-  selectsignaldialog.h
-  setscaledialog.h
-  signaldata.h
-  signaldescription.h
-  signalhandler.h
-  ${python_moc_srcs}
-  DESTINATION signal_scope)
 
-
-pods_install_executables(signal-scope)
-
+  pods_install_executables(signal-scope)
+endif()
