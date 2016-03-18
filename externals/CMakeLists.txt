@@ -124,3 +124,7 @@ if (BUILD_SIGNAL_SCOPE)
       ${lcm_depends}
     )
 endif()
+   
+  # message("in externals")
+  # message(${CMAKE_INSTALL_PREFIX})
+  # message(${CATKIN_DEVEL_PREFIX})
