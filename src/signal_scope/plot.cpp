@@ -261,7 +261,7 @@ Plot::Plot(QWidget *parent):
   setAxisAutoScale(QwtPlot::xBottom, false);
   setAxisAutoScale(QwtPlot::yLeft, false);
 
-  setAxisTitle(QwtPlot::xBottom, "Time [s]");
+  // setAxisTitle(QwtPlot::xBottom, "Time [s]");
   setAxisScale(QwtPlot::xBottom, 0, 10);
   setAxisScale(QwtPlot::yLeft, -4.0, 4.0);
 
