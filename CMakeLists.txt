@@ -1,11 +1,14 @@
 cmake_minimum_required(VERSION 2.6.0)
-project(signal-scope)
+project(oscilloscope)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CATKIN_CALL "${CATKIN_DEVEL_PREFIX}")
 if(CATKIN_CALL)
 	message(STATUS "Compiling signal scope as a catkin project")
+	catkin_package()
 	find_package(catkin REQUIRED)
-	add_subdirectory(externals)
+	# add_subdirectory(externals)
 	list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 	
 	set(PYTHONQT_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include/PythonQt")
