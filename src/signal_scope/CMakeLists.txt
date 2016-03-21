@@ -122,7 +122,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CATKIN_DEVEL_PREFIX}/lib/oscilloscope/)
 add_executable(signal-scope ${srcs})
 target_link_libraries(signal-scope ${deps})
 if (CATKIN_CALL)
-  add_dependencies(signal-scope PythonQt lcm ctkPythonConsole)
+  add_dependencies(signal-scope PythonQt lcm ctkPythonConsole blah)
 endif()
 
 if(NOT CATKIN_CALL)
