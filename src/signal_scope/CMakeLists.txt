@@ -1,6 +1,8 @@
 find_package(Qt4 REQUIRED QtCore QtGui QtScript)
 include(${QT_USE_FILE})
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
 find_package(LCM REQUIRED)
 
 
@@ -43,9 +45,11 @@ if(USE_PYTHON)
   endif()
 
   find_package(PythonLibs 2.7 REQUIRED)
-  find_package(PythonQt REQUIRED)
-  find_package(CTKPythonConsole REQUIRED)
-
+  if(NOT CATKIN_CALL)
+    find_package(PythonQt REQUIRED)
+    find_package(CTKPythonConsole REQUIRED)
+  endif()
+  
   include_directories(${PYTHON_INCLUDE_DIRS})
   include_directories(${PYTHONQT_INCLUDE_DIRS})
   include_directories(${CTK_PYTHONCONSOLE_INCLUDE_DIRS})
@@ -117,6 +121,9 @@ list(APPEND deps
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CATKIN_DEVEL_PREFIX}/lib/oscilloscope/)
 add_executable(signal-scope ${srcs})
 target_link_libraries(signal-scope ${deps})
+if (CATKIN_CALL)
+  add_dependencies(signal-scope PythonQt lcm ctkPythonConsole)
+endif()
 
 if(NOT CATKIN_CALL)
   pods_install_headers(
