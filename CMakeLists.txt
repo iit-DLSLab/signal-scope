@@ -7,6 +7,10 @@ if(CATKIN_CALL)
 	catkin_package()
 	find_package(catkin REQUIRED)
 	list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+	if (NOT EXISTS /usr/local/lib/libctkPythonConsole.so OR NOT EXISTS /usr/local/lib/libPythonQt.so)
+		message(STATUS "Could not find PythonQt or ctkPythonConsole - running the script to install external packages")
+		execute_process(COMMAND ./install_external_packages.sh WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+	endif()
 else()
 	list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 endif()	
@@ -30,3 +34,4 @@ option(USE_BUILTIN_LCMTYPES "Compile builtin LCM types" ${use_builtin_lcmtypes_d
 option(USE_PYTHON "Enable Python support." ON)
 
 add_subdirectory(src/signal_scope)
+
