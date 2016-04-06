@@ -54,6 +54,9 @@ public:
   QList<SignalHandler*> signalHandlers();
 
   QTimer *rescalingTimer;
+
+  void setTimeWindow(double timeWindow);
+
 public slots:
 
   void onShowContextMenu(const QPoint&);
@@ -64,8 +67,6 @@ public slots:
   void onResetYAxisScale();
   void resetYAxisMaxScale();
   void setYAxisScale(double lower, double upper);
-
-  void setTimeWindow(double timeWindow);
 
 signals:
 
@@ -81,7 +82,6 @@ private:
   PythonChannelSubscriberCollection* mSubscribers;
   QListWidget* mSignalListWidget;
   QLabel* mSignalInfoLabel;
-  QDoubleSpinBox* mTimeWindowSpin;
   float yRange[2];
 };
 

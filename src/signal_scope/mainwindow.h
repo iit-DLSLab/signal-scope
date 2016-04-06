@@ -4,6 +4,7 @@
 #include <qmainwindow.h>
 #include <qvariant.h>
 #include "fpscounter.h"
+#include <QDoubleSpinBox>
 
 class QScrollArea;
 class QVBoxLayout;
@@ -47,6 +48,7 @@ public slots:
   void onChooseBackgroundColor();
   void onChooseHistoryLength();
   void onChoosePointSize();
+  void onTimeWindowChange(double timeWindow);
 
   PlotWidget* addPlot();
   void loadPythonScript(const QString& filename);
@@ -80,6 +82,7 @@ protected:
 
   QList<SignalHandler*> getSignalSelectionFromUser();
 
+  QDoubleSpinBox *timeWindowSpin;
   bool mPlaying;
   QString mLastOpenFile;
   QString mLastPythonScript;
