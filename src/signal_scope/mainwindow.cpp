@@ -121,10 +121,23 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   alignCombo->addItem("center");
   mInternal->toolBar->addWidget(alignCombo);
 
+  timeWindowSpin = new QDoubleSpinBox;
+  timeWindowSpin->setSingleStep(0.1);
+  timeWindowSpin->setMinimum(0.0);
+  timeWindowSpin->setMaximum(60*5);
+  timeWindowSpin->setValue(10.0);
+
+  QWidget* timeWindowWidget = new QWidget;
+  QHBoxLayout* frameLayout = new QHBoxLayout(timeWindowWidget);
+  timeWindowWidget->setContentsMargins(0, 0, 0, 0);
+  frameLayout->addWidget(new QLabel("Time Window [s]:"));
+  frameLayout->addWidget(timeWindowSpin);
+  mInternal->toolBar->addWidget(timeWindowWidget);
 
   this->connect(curveStyleCombo, SIGNAL(currentIndexChanged(const QString&)), SLOT(onCurveStyleChanged(QString)));
   this->connect(pointSizeSpin, SIGNAL(valueChanged(int)), SLOT(onPointSizeChanged(int)));
   this->connect(alignCombo, SIGNAL(currentIndexChanged(const QString&)), SLOT(onAlignModeChanged(QString)));
+  this->connect(timeWindowSpin, SIGNAL(valueChanged(double)), SLOT(onTimeWindowChange(double)));
 
   mRedrawTimer = new QTimer(this);
   //mRedrawTimer->setSingleShot(true);
@@ -262,6 +275,15 @@ PythonSignalHandler* MainWindow::addPythonSignal(PlotWidget* plot, QVariant sign
   PythonSignalHandler* signalHandler = new PythonSignalHandler(&signalDescription, callback);
   plot->addSignal(signalHandler);
   return signalHandler;
+}
+
+void MainWindow::onTimeWindowChange(double timeWindow)
+{
+  foreach (PlotWidget* plot, mPlots)
+  {
+    // qDebug() << timeWindow;
+    plot->setTimeWindow(timeWindow);
+  }
 }
 
 void MainWindow::loadPythonScript(const QString& filename)

@@ -42,27 +42,11 @@ PlotWidget::PlotWidget(PythonChannelSubscriberCollection* subscribers, QWidget *
           << Qt::darkMagenta
           << Qt::black;
 
-  mTimeWindowSpin = new QDoubleSpinBox;
-  mTimeWindowSpin->setSingleStep(0.1);
-  mTimeWindowSpin->setMinimum(0.0);
-  mTimeWindowSpin->setMaximum(60*5);
-
   QDoubleSpinBox* yScaleSpin = new QDoubleSpinBox;
   yScaleSpin->setSingleStep(0.1);
 
 
   QVBoxLayout* vLayout1 = new QVBoxLayout();
-
-
-  //QPushButton* resetYScaleButton = new QPushButton("Reset Y scale");
-  //vLayout1->addWidget(resetYScaleButton);
-
-  QWidget* frameWidget = new QWidget;
-  QHBoxLayout* frameLayout = new QHBoxLayout(frameWidget);
-  frameWidget->setContentsMargins(0, 0, 0, 0);
-  frameLayout->addWidget(new QLabel("Time Window [s]:"));
-  frameLayout->addWidget(mTimeWindowSpin);
-  vLayout1->addWidget(frameWidget);
 
 
   mSignalListWidget = new QListWidget(this);
@@ -77,17 +61,9 @@ PlotWidget::PlotWidget(PythonChannelSubscriberCollection* subscribers, QWidget *
   layout->addWidget(d_plot, 10);
   layout->addLayout(vLayout1);
 
-  mTimeWindowSpin->setValue(d_plot->timeWindow());
-
-  connect(mTimeWindowSpin, SIGNAL(valueChanged(double)),
-          d_plot, SLOT(setTimeWindow(double)));
-
-  connect(d_plot, SIGNAL(syncXAxisScale(double, double)),
-          this, SIGNAL(syncXAxisScale(double, double)));
-
-  //connect(yScaleSpin, SIGNAL(valueChanged(double)),
+  // connect(yScaleSpin, SIGNAL(valueChanged(double)),
   //        d_plot, SLOT(setYScale(double)));
-  //yScaleSpin->setValue(10.0);
+  // yScaleSpin->setValue(10.0);
 
   this->setContextMenuPolicy(Qt::CustomContextMenu);
   this->connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
@@ -554,7 +530,7 @@ void PlotWidget::addSignal(SignalHandler* signalHandler)
 
 void PlotWidget::setTimeWindow(double timeWindow)
 {
-  mTimeWindowSpin->setValue(timeWindow);
+  d_plot->setTimeWindow(timeWindow);
 }
 
 void PlotWidget::loadSettings(const QMap<QString, QVariant>& plotSettings)
