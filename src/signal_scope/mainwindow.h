@@ -49,7 +49,9 @@ public slots:
   void onChooseHistoryLength();
   void onChoosePointSize();
   void onTimeWindowChange(double timeWindow);
-
+  void onPointSizeChanged(int size);
+  void onCurveStyleChanged(QString style);
+  
   PlotWidget* addPlot();
   void loadPythonScript(const QString& filename);
   PythonSignalHandler* addPythonSignal(PlotWidget* plot, QVariant signalData);
@@ -61,9 +63,7 @@ protected slots:
   void onSyncXAxis(double x0, double x1);
 
   void onRedrawPlots();
-
-  void onPointSizeChanged(int size);
-  void onCurveStyleChanged(QString style);
+  
   void onAlignModeChanged(QString mode);
 
 protected:
