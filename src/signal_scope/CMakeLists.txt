@@ -1,9 +1,10 @@
 find_package(Qt4 REQUIRED QtCore QtGui QtScript)
 include(${QT_USE_FILE})
 
-find_package(LCM REQUIRED)
-
-
+find_package(PkgConfig)
+pkg_check_modules (LCM lcm)
+include_directories(${LCM_INCLUDE_DIRS})
+link_directories(${LCM_LIBRARY_DIRS})
 
 set(deps)
 
