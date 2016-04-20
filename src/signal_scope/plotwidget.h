@@ -32,7 +32,6 @@ public:
 
   void clearHistory();
   void setBackgroundColor(QString color);
-  void setPointSize(double pointSize);
   void setCurveStyle(QwtPlotCurve::CurveStyle style);
   void setAlignMode(QString mode);
 
@@ -55,8 +54,6 @@ public:
 
   QTimer *rescalingTimer;
 
-  void setTimeWindow(double timeWindow);
-
 public slots:
 
   void onShowContextMenu(const QPoint&);
@@ -68,6 +65,8 @@ public slots:
   void resetYAxisMaxScale();
   void setYAxisScale(double lower, double upper);
 
+  void setTimeWindow(double timeWindow);
+  void setPointSize(double pointSize);
 signals:
 
   void addSignalRequested(PlotWidget* plot);
