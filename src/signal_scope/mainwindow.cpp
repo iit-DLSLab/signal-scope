@@ -288,7 +288,6 @@ void MainWindow::onTimeWindowChange(double timeWindow)
 {
   foreach (PlotWidget* plot, mPlots)
   {
-    // qDebug() << timeWindow;
     plot->setTimeWindow(timeWindow);
   }
 }

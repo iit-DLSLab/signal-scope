@@ -147,12 +147,12 @@ def decodeMessageFunction(messageBytes):
 msg = LookupHelper()
 tNow = LocalTimeHelper()
 
-def setFormatOptions(pointSize=None, timeWindow=None, curveStyle=None):
+def formatOptions(pointSize=None, timeWindow=None, curveStyle=None):
     window = _mainWindow;
     if pointSize is not None:
       window.onPointSizeChanged(pointSize)
     if timeWindow is not None:
-      window.onTimeWindowChanged(timeWindow)
+      window.onTimeWindowChange(timeWindow)
     if curveStyle is not None:
       if curveStyle in ["dots","lines"]:
         window.onCurveStyleChanged(curveStyle);
