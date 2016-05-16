@@ -32,7 +32,6 @@ public:
 
   void clearHistory();
   void setBackgroundColor(QString color);
-  void setPointSize(double pointSize);
   void setCurveStyle(QwtPlotCurve::CurveStyle style);
   void setAlignMode(QString mode);
 
@@ -54,6 +53,7 @@ public:
   QList<SignalHandler*> signalHandlers();
 
   QTimer *rescalingTimer;
+
 public slots:
 
   void onShowContextMenu(const QPoint&);
@@ -66,7 +66,7 @@ public slots:
   void setYAxisScale(double lower, double upper);
 
   void setTimeWindow(double timeWindow);
-
+  void setPointSize(double pointSize);
 signals:
 
   void addSignalRequested(PlotWidget* plot);
@@ -81,7 +81,6 @@ private:
   PythonChannelSubscriberCollection* mSubscribers;
   QListWidget* mSignalListWidget;
   QLabel* mSignalInfoLabel;
-  QDoubleSpinBox* mTimeWindowSpin;
   float yRange[2];
 };
 
