@@ -80,14 +80,25 @@ PlotWidget::PlotWidget(PythonChannelSubscriberCollection* subscribers, QWidget *
 
   this->connect(mSignalListWidget, SIGNAL(itemChanged(QListWidgetItem *)), SLOT(onSignalListItemChanged(QListWidgetItem*)));
 
-  QTimer* labelUpdateTimer = new QTimer(this);
+  labelUpdateTimer = new QTimer(this);
   this->connect(labelUpdateTimer, SIGNAL(timeout()), SLOT(updateSignalInfoLabel()));
+
   labelUpdateTimer->start(100);
 
   rescalingTimer = new QTimer(this);
   this->connect(rescalingTimer, SIGNAL(timeout()), SLOT(resetYAxisMaxScale()));
   this->yRange[0] = std::numeric_limits<double>::max();
   this->yRange[1] = -std::numeric_limits<double>::max();
+}
+
+void PlotWidget::onShowSignalValueLabel(bool show)
+{
+  if (show){
+    this->connect(labelUpdateTimer, SIGNAL(timeout()), SLOT(updateSignalValueLabel()));
+  } else {
+    this->disconnect(labelUpdateTimer,SIGNAL(timeout()),this, SLOT(updateSignalValueLabel()));
+    setSignalLabelText();
+  }
 }
 
 void PlotWidget::onShowContextMenu(const QPoint& pos)
@@ -246,6 +257,47 @@ void PlotWidget::resetYAxisMaxScale()
   
   if (update){
     onResetYAxisScale();
+  }
+}
+
+void PlotWidget::setSignalLabelText()
+{
+  for (int ii=0; ii<mSignalListWidget->count(); ii++){
+
+    QListWidgetItem* signalItem = mSignalListWidget->item(ii);
+    SignalHandler* signalHandler = signalItem->data(Qt::UserRole).value<SignalHandler*>();
+    if (!signalHandler)
+      continue;
+    
+    SignalData* signalData = signalHandler->signalData();
+    QString signalValue = "No data";
+    QString signalDescription = QString("%2 [%1]").arg(signalHandler->channel()).arg(signalHandler->description().split(".").back());
+
+    // QString tlabel = signalItem->text().section(" ",1,0);
+    signalItem->setText(signalDescription);
+  }
+}
+
+void PlotWidget::updateSignalValueLabel()
+{
+  for (int ii=0; ii<mSignalListWidget->count(); ii++){
+
+    QListWidgetItem* signalItem = mSignalListWidget->item(ii);
+    SignalHandler* signalHandler = signalItem->data(Qt::UserRole).value<SignalHandler*>();
+    SignalData* signalData = signalHandler->signalData();
+    QString signalValue = "No data";
+    int numberOfValues = signalData->size();
+    if (numberOfValues)
+    {
+      signalValue = QString::number(signalData->value(numberOfValues-1).y(), 'g', 6);
+    }
+
+    QString test = signalHandler->signalDescription()->mFieldName;
+    test.replace("]","[");
+    QString signalDescription = test.section("[",1,1);
+
+    // QString tlabel = signalItem->text().section(" ",1,0);
+    signalItem->setText(signalDescription + QString(" ") + signalValue);
   }
 }
 

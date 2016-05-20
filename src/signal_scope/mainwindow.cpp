@@ -131,9 +131,15 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   QHBoxLayout* frameLayout = new QHBoxLayout(timeWindowWidget);
   timeWindowWidget->setContentsMargins(0, 0, 0, 0);
   frameLayout->addWidget(new QLabel("Time Window [s]:"));
+
   frameLayout->addWidget(timeWindowSpin);
   mInternal->toolBar->addWidget(timeWindowWidget);
 
+  showLabelValueBox = new QCheckBox("Show all values",this);
+  showLabelValueBox->setLayoutDirection(Qt::RightToLeft);
+  mInternal->toolBar->addWidget(showLabelValueBox);
+
+  this->connect(showLabelValueBox,SIGNAL(stateChanged(int)), this, SLOT(onValueBoxChanged(int)));
   this->connect(curveStyleCombo, SIGNAL(currentIndexChanged(const QString&)), SLOT(onCurveStyleChanged(QString)));
   this->connect(pointSizeSpin, SIGNAL(valueChanged(int)), SLOT(onPointSizeChanged(int)));
   this->connect(alignCombo, SIGNAL(currentIndexChanged(const QString&)), SLOT(onAlignModeChanged(QString)));
@@ -356,6 +362,22 @@ void MainWindow::onAutomaticResize()
   }
 }
 
+void MainWindow::onValueBoxChanged(int state)
+{
+  if (state == Qt::Unchecked){
+    foreach (PlotWidget* plot, mPlots)
+    {
+      plot->onShowSignalValueLabel(false);
+    }    
+  }
+  else
+  {
+    foreach (PlotWidget* plot, mPlots)
+    {
+      plot->onShowSignalValueLabel(true);
+    }
+  }  
+}
 void MainWindow::onClearHistory()
 {
   foreach (PlotWidget* plot, mPlots)
