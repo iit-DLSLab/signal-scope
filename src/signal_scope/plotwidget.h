@@ -54,6 +54,7 @@ public:
 
   QTimer *rescalingTimer;
 
+  void onShowSignalValueLabel(bool show);
 public slots:
 
   void onShowContextMenu(const QPoint&);
@@ -61,6 +62,7 @@ public slots:
 
   void onSignalListItemChanged(QListWidgetItem* item);
   void updateSignalInfoLabel();
+  void updateSignalValueLabel();
   void onResetYAxisScale();
   void resetYAxisMaxScale();
   void setYAxisScale(double lower, double upper);
@@ -74,7 +76,7 @@ signals:
   void syncXAxisScale(double x0, double x1);
 
 private:
-
+  QTimer* labelUpdateTimer;
   Plot *d_plot;
   QMap<QListWidgetItem*, SignalHandler*> mSignals;
   QList<QColor> mColors;
@@ -82,6 +84,7 @@ private:
   QListWidget* mSignalListWidget;
   QLabel* mSignalInfoLabel;
   float yRange[2];
+  void setSignalLabelText();
 };
 
 #endif
