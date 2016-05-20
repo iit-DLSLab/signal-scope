@@ -147,6 +147,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   this->handleCommandLineArgs();
 
   this->onTogglePause();
+  mInternal->ActionAutomaticResize->trigger();
 
   mLCMThread->start();
 }
@@ -494,6 +495,10 @@ void MainWindow::onOpenPythonScript()
   {
     this->loadPythonScript(filename);
   }
+
+  onResize();
+  onAutomaticResize();
+
 }
 
 
