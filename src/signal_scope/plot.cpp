@@ -285,7 +285,7 @@ Plot::Plot(QWidget *parent):
   zoomer->setRubberBandPen(c);
   zoomer->setTrackerPen(c);
 
-  this->setMinimumHeight(200);
+  this->setMinimumHeight(50);
 }
 
 Plot::~Plot()
