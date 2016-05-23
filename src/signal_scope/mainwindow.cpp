@@ -550,8 +550,10 @@ void MainWindow::saveSettings(const QString& filename)
 {
   QMap<QString, QVariant> settings;
 
+  settings["labelCheckBox"] = this->showLabelValueBox->isChecked();
   settings["windowWidth"] = this->width();
   settings["windowHeight"] = this->height();
+
   if (this->mLastPythonScript.length())
   {
     settings["script"] = QFileInfo(this->mLastPythonScript).canonicalFilePath();
@@ -595,6 +597,8 @@ void MainWindow::loadSettings(const QMap<QString, QVariant>& settings)
   int windowWidth = settings.value("windowWidth", 1024).toInt();
   int windowHeight = settings.value("windowHeight", 800).toInt();
   this->resize(windowWidth, windowHeight);
+  if (settings["labelCheckBox"].toBool())
+    this->showLabelValueBox->setChecked(true);
 }
 
 void MainWindow::onTogglePause()
