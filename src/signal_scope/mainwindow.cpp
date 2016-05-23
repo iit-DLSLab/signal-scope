@@ -284,11 +284,10 @@ PythonSignalHandler* MainWindow::addPythonSignal(PlotWidget* plot, QVariant sign
   return signalHandler;
 }
 
-void MainWindow::onTimeWindowChange(double timeWindow)
+void MainWindow::onTimeWindowChanged(double timeWindow)
 {
   foreach (PlotWidget* plot, mPlots)
   {
-    // qDebug() << timeWindow;
     plot->setTimeWindow(timeWindow);
   }
 }

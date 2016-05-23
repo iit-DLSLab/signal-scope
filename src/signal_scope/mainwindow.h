@@ -49,11 +49,12 @@ public slots:
   void onChooseBackgroundColor();
   void onChooseHistoryLength();
   void onChoosePointSize();
-  void onTimeWindowChange(double timeWindow);
+  void onTimeWindowChanged(double timeWindow);
   void onPointSizeChanged(int size);
   void onCurveStyleChanged(QString style);
   void onValueBoxChanged(int state);
   
+
   PlotWidget* addPlot();
   void loadPythonScript(const QString& filename);
   PythonSignalHandler* addPythonSignal(PlotWidget* plot, QVariant signalData);
