@@ -107,7 +107,7 @@ protected:
 
   class Internal;
   Internal* mInternal;
-
+  void showXaxis();
 };
 
 #endif

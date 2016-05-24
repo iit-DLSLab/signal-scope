@@ -23,13 +23,18 @@
 #include <QColorDialog>
 #include <QDebug>
 
+void PlotWidget::showXaxis()
+{
+  d_plot->enableAxis(QwtPlot::xBottom, true);
+}
+
 PlotWidget::PlotWidget(PythonChannelSubscriberCollection* subscribers, QWidget *parent):
     QWidget(parent),
     mSubscribers(subscribers)
 {
 
   d_plot = new Plot(this);
-
+  d_plot->enableAxis(QwtPlot::xBottom, false);
   mColors << Qt::red
           << Qt::green
           << Qt::blue
