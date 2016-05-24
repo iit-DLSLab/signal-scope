@@ -306,6 +306,8 @@ void MainWindow::loadPythonScript(const QString& filename)
   {
     printf("file does not exist: %s\n", qPrintable(filename));
   }
+
+  this->showXaxis();
 }
 
 void MainWindow::onCurveStyleChanged(QString style)
@@ -456,6 +458,16 @@ void MainWindow::onSyncXAxis(double x0, double x1)
     plot->setXAxisScale(x0, x1);
     plot->replot();
   }
+}
+
+void MainWindow::showXaxis()
+{
+
+  if (!mPlots.isEmpty())
+  {
+    PlotWidget* lastPlot = mPlots.last();
+    lastPlot->showXaxis();
+  }  
 }
 
 void MainWindow::onRedrawPlots()

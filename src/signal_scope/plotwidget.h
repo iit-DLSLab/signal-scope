@@ -55,6 +55,8 @@ public:
   QTimer *rescalingTimer;
 
   void onShowSignalValueLabel(bool show);
+  void showXaxis();
+  
 public slots:
 
   void onShowContextMenu(const QPoint&);
