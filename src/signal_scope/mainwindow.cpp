@@ -14,7 +14,6 @@
 #include <QLabel>
 #include <QLayout>
 #include <QApplication>
-#include <QComboBox>
 #include <QLabel>
 #include <QSpinBox>
 #include <QDebug>
@@ -100,14 +99,14 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   mInternal->toolBar->addSeparator();
   mInternal->toolBar->addWidget(new QLabel("    Style: "));
 
-  QComboBox* curveStyleCombo = new QComboBox(this);
+  curveStyleCombo = new QComboBox(this);
   curveStyleCombo->addItem("points");
   curveStyleCombo->addItem("lines");
   mInternal->toolBar->addWidget(curveStyleCombo);
 
   mInternal->toolBar->addWidget(new QLabel("    Point size: "));
 
-  QSpinBox* pointSizeSpin = new QSpinBox(this);
+  pointSizeSpin = new QSpinBox(this);
   pointSizeSpin->setMinimum(1);
   pointSizeSpin->setMaximum(20);
   pointSizeSpin->setSingleStep(1);
@@ -143,7 +142,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   this->connect(curveStyleCombo, SIGNAL(currentIndexChanged(const QString&)), SLOT(onCurveStyleChanged(QString)));
   this->connect(pointSizeSpin, SIGNAL(valueChanged(int)), SLOT(onPointSizeChanged(int)));
   this->connect(alignCombo, SIGNAL(currentIndexChanged(const QString&)), SLOT(onAlignModeChanged(QString)));
-  this->connect(timeWindowSpin, SIGNAL(valueChanged(double)), SLOT(onTimeWindowChange(double)));
+  this->connect(timeWindowSpin, SIGNAL(valueChanged(double)), SLOT(onTimeWindowChanged(double)));
 
   mRedrawTimer = new QTimer(this);
   //mRedrawTimer->setSingleShot(true);
@@ -286,6 +285,11 @@ PythonSignalHandler* MainWindow::addPythonSignal(PlotWidget* plot, QVariant sign
 
 void MainWindow::onTimeWindowChanged(double timeWindow)
 {
+  if (timeWindowSpin->value() != timeWindow){
+    timeWindowSpin->setValue(timeWindow);
+    return;
+  }
+
   foreach (PlotWidget* plot, mPlots)
   {
     plot->setTimeWindow(timeWindow);
@@ -312,6 +316,11 @@ void MainWindow::loadPythonScript(const QString& filename)
 
 void MainWindow::onCurveStyleChanged(QString style)
 {
+  if (this->curveStyleCombo->currentText() != style){
+    this->curveStyleCombo->setCurrentIndex(this->curveStyleCombo->findText(style));
+    return;
+  }
+
   QwtPlotCurve::CurveStyle curveStyle = style == "lines" ? QwtPlotCurve::Lines : QwtPlotCurve::Dots;
 
   foreach (PlotWidget* plot, mPlots)
@@ -331,6 +340,11 @@ void MainWindow::onAlignModeChanged(QString mode)
 
 void MainWindow::onPointSizeChanged(int pointSize)
 {
+  if (this->pointSizeSpin->value() != pointSize){
+    this->pointSizeSpin->setValue(pointSize);
+    return;
+  }
+
   foreach (PlotWidget* plot, mPlots)
   {
     plot->setPointSize(pointSize - 1);

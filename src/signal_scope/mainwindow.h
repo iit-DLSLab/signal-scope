@@ -6,6 +6,7 @@
 #include "fpscounter.h"
 #include <QDoubleSpinBox>
 #include <QCheckBox>
+#include <QComboBox>
 
 class QScrollArea;
 class QVBoxLayout;
@@ -53,7 +54,6 @@ public slots:
   void onPointSizeChanged(int size);
   void onCurveStyleChanged(QString style);
   void onValueBoxChanged(int state);
-  
 
   PlotWidget* addPlot();
   void loadPythonScript(const QString& filename);
@@ -70,6 +70,8 @@ protected slots:
   void onAlignModeChanged(QString mode);
 
 protected:
+  QComboBox* curveStyleCombo;
+  QSpinBox* pointSizeSpin;
   QCheckBox *showLabelValueBox;
   void handleCommandLineArgs();
   void saveSettings(const QString& filename);
