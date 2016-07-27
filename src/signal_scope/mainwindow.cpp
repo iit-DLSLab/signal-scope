@@ -543,6 +543,7 @@ void MainWindow::onReloadPythonScript()
   }
   onResize();
   onAutomaticResize();
+  onResetTimeZero();
 }
 
 void MainWindow::onOpenPythonScript()
