@@ -54,7 +54,8 @@ public slots:
   void onPointSizeChanged(int size);
   void onCurveStyleChanged(QString style);
   void onValueBoxChanged(int state);
-
+  void onReloadPythonScript();
+  
   PlotWidget* addPlot();
   void loadPythonScript(const QString& filename);
   PythonSignalHandler* addPythonSignal(PlotWidget* plot, QVariant signalData);

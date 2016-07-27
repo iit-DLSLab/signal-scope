@@ -68,6 +68,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="ActionOpenPython"/>
+   <addaction name="ActionReloadPython"/>
    <!-- <addaction name="ActionSave"/> -->
    <addaction name="separator"/>
    <addaction name="ActionClearHistory"/>
@@ -155,6 +156,11 @@
    <property name="text">
     <string>Point size...</string>
    </property>
+  </action>
+  <action name="ActionReloadPython">
+    <property name="text">
+      <string>Reload Python Script...</string>
+    </property>
   </action>
   <action name="ActionOpenPython">
    <property name="text">

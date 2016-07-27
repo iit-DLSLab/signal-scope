@@ -72,6 +72,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   this->setCentralWidget(mScrollArea);
 
   mInternal->ActionOpen->setIcon(qApp->style()->standardIcon(QStyle::SP_DialogOpenButton));
+  mInternal->ActionReloadPython->setIcon(qApp->style()->standardIcon(QStyle::SP_FileDialogStart));
   mInternal->ActionOpenPython->setIcon(qApp->style()->standardIcon(QStyle::SP_DialogOpenButton));
   mInternal->ActionSave->setIcon(qApp->style()->standardIcon(QStyle::SP_DialogSaveButton));
   mInternal->ActionPause->setIcon(qApp->style()->standardIcon(QStyle::SP_MediaPlay));
@@ -83,6 +84,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
 
   this->connect(mInternal->ActionQuit, SIGNAL(triggered()), SLOT(close()));
   this->connect(mInternal->ActionOpen, SIGNAL(triggered()), SLOT(onOpenSettings()));
+  this->connect(mInternal->ActionReloadPython, SIGNAL(triggered()), SLOT(onReloadPythonScript()));
   this->connect(mInternal->ActionOpenPython, SIGNAL(triggered()), SLOT(onOpenPythonScript()));
   this->connect(mInternal->ActionSave, SIGNAL(triggered()), SLOT(onSaveSettings()));
   this->connect(mInternal->ActionPause, SIGNAL(triggered()), SLOT(onTogglePause()));
@@ -533,6 +535,15 @@ void MainWindow::onRedrawPlots()
   }
 }
 
+void MainWindow::onReloadPythonScript()
+{
+  if (this->mLastPythonScript.length())
+  {
+    this->loadPythonScript(this->mLastPythonScript);
+  }
+  onResize();
+  onAutomaticResize();
+}
 
 void MainWindow::onOpenPythonScript()
 {
