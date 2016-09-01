@@ -482,7 +482,8 @@ void Plot::replot()
   }
 
   QwtPlot::replot();
-
+  QwtPlot::updateLayout();
+  
   foreach (SignalData* signalData, signalDataList)
   {
     signalData->unlock();
