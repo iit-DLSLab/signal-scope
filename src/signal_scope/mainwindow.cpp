@@ -395,7 +395,7 @@ void MainWindow::onValueBoxChanged(int state)
   }  
 }
 void MainWindow::onClearHistory()
-{
+{ 
   foreach (PlotWidget* plot, mPlots)
   {
     plot->clearHistory();
@@ -535,11 +535,11 @@ void MainWindow::onRedrawPlots()
       maxExtent = extent;
   }
 
-  qDebug() << maxExtent;
-
   foreach (PlotWidget* plot, mPlots)
   {
-    plot->setExtent(maxExtent);
+    double extent = plot->getExtent();
+    if ( extent != maxExtent )
+      plot->setExtent(maxExtent);
     plot->setEndTime(maxTime);
     plot->replot();
   }
@@ -554,6 +554,8 @@ void MainWindow::onReloadPythonScript()
   onResize();
   onAutomaticResize();
   onResetTimeZero();
+  if (showLabelValueBox->isChecked())
+    onValueBoxChanged(Qt::Checked);
 }
 
 void MainWindow::onOpenPythonScript()
