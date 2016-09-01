@@ -387,10 +387,19 @@ void PlotWidget::onResetYAxisScale()
   this->setYAxisScale(area.top(), area.bottom());
 }
 
+double PlotWidget::getExtent()
+{
+  return d_plot->getExtent();
+}
+
+void PlotWidget::setExtent(double maxExtent)
+{
+  d_plot->setExtent(maxExtent);
+}
+
 void PlotWidget::setYAxisScale(double lower, double upper)
 {
   d_plot->setAxisScale(QwtPlot::yLeft, lower, upper);
-  this->replot();
 }
 
 void PlotWidget::onSignalListItemChanged(QListWidgetItem* item)

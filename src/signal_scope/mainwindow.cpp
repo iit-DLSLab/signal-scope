@@ -32,7 +32,6 @@
 #include "pythonmessageinspector.h"
 #include "pythonchannelsubscribercollection.h"
 
-
 #include <cstdio>
 #include <limits>
 
@@ -528,8 +527,19 @@ void MainWindow::onRedrawPlots()
     return;
   }
 
+  double maxExtent = 0;
   foreach (PlotWidget* plot, mPlots)
   {
+    double extent = plot->getExtent();
+    if ( extent > maxExtent )
+      maxExtent = extent;
+  }
+
+  qDebug() << maxExtent;
+
+  foreach (PlotWidget* plot, mPlots)
+  {
+    plot->setExtent(maxExtent);
     plot->setEndTime(maxTime);
     plot->replot();
   }
