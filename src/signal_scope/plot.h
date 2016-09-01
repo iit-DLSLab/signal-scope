@@ -57,6 +57,9 @@ public:
     void setPointSize(double pointSize);
     void setCurveStyle(QwtPlotCurve::CurveStyle style);
 
+    double getExtent();
+    void setExtent(double extent);
+    
 signals:
 
     void syncXAxisScale(double x0, double x1);

@@ -15,6 +15,7 @@
 #include <qwt/qwt_plot_panner.h>
 #include <qwt/qwt_plot_magnifier.h>
 #include <qwt/qwt_text.h>
+#include <qwt/qwt_scale_widget.h>
 
 #include <qevent.h>
 
@@ -546,6 +547,22 @@ void Plot::setEndTime(double endTime)
   this->setAxisScale(QwtPlot::xBottom, xinterval.minValue(), xinterval.maxValue());
 
   d_marker->setValue((xinterval.minValue() + xinterval.maxValue())/2.0, 0.0);
+}
+
+double Plot::getExtent()
+{
+  QwtScaleWidget *scaleWidget = this->axisWidget( QwtPlot::yLeft );
+
+  QwtScaleDraw *sd = scaleWidget->scaleDraw();
+  sd->setMinimumExtent( 0.0 );
+
+  return sd->extent( scaleWidget->font() );
+}
+
+void Plot::setExtent(double maxExtent)
+{
+  QwtScaleWidget *scaleWidget = this->axisWidget( QwtPlot::yLeft );
+  scaleWidget->scaleDraw()->setMinimumExtent( maxExtent );
 }
 
 void Plot::updateTicks()

@@ -56,7 +56,10 @@ public:
 
   void onShowSignalValueLabel(bool show);
   void showXaxis();
-  
+
+  double getExtent();
+  void setExtent(double extent);
+
 public slots:
 
   void onShowContextMenu(const QPoint&);
@@ -71,6 +74,7 @@ public slots:
 
   void setTimeWindow(double timeWindow);
   void setPointSize(double pointSize);
+  
 signals:
 
   void addSignalRequested(PlotWidget* plot);
