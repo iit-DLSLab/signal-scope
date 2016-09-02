@@ -59,7 +59,11 @@ public:
 
   double getExtent();
   void setExtent(double extent);
-
+  void onMovedAnotherCanvas(int dx, int dy, QPoint pos);
+  
+private slots:
+  void onMovedMyCanvas(int dx, int dy, QPoint pos);
+  
 public slots:
 
   void onShowContextMenu(const QPoint&);
@@ -80,6 +84,7 @@ signals:
   void addSignalRequested(PlotWidget* plot);
   void removePlotRequested(PlotWidget* plot);
   void syncXAxisScale(double x0, double x1);
+  void movedCanvasSignal(int dx, int dy, QPoint pos);
 
 private:
   QTimer* labelUpdateTimer;

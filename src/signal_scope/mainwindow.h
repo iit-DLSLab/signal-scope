@@ -65,15 +65,17 @@ public slots:
 protected slots:
 
   void onSyncXAxis(double x0, double x1);
-
+  void onMoveCanvas(int dx,int dy,QPoint pos);
   void onRedrawPlots();
-  
+  void onLinkAxesBoxChanged(int state);
   void onAlignModeChanged(QString mode);
-
+  // void onZoomed(const QRectF &rect);
+  
 protected:
   QComboBox* curveStyleCombo;
   QSpinBox* pointSizeSpin;
   QCheckBox *showLabelValueBox;
+  QCheckBox *linkAxesBox;
   void handleCommandLineArgs();
   void saveSettings(const QString& filename);
   void loadSettings(const QString& filename);

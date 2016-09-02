@@ -73,7 +73,7 @@ PlotWidget::PlotWidget(PythonChannelSubscriberCollection* subscribers, QWidget *
   this->setContextMenuPolicy(Qt::CustomContextMenu);
   this->connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
       SLOT(onShowContextMenu(const QPoint&)));
-
+  this->connect(d_plot,SIGNAL(movedMyCanvasSignal(int, int, QPoint)), this, SLOT(onMovedMyCanvas(int, int, QPoint)));
   //mSignalListWidget->setDragDropMode(QAbstractItemView::DragDrop);
   //mSignalListWidget->setDragEnabled(true);
   //mSignalListWidget->setDefaultDropAction(Qt::MoveAction);
@@ -96,6 +96,16 @@ PlotWidget::PlotWidget(PythonChannelSubscriberCollection* subscribers, QWidget *
   this->yRange[1] = -std::numeric_limits<double>::max();
 }
 
+void PlotWidget::onMovedMyCanvas(int dx, int dy, QPoint pos)
+{
+    emit movedCanvasSignal(dx,dy,pos);
+    return;
+}
+
+void PlotWidget::onMovedAnotherCanvas(int dx, int dy, QPoint pos) 
+{
+  d_plot->moveCanvas(dx,dy,pos);
+}
 void PlotWidget::onShowSignalValueLabel(bool show)
 {
   if (show){
