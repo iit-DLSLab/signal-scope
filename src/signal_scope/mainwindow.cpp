@@ -319,7 +319,17 @@ void MainWindow::loadPythonScript(const QString& filename)
     printf("file does not exist: %s\n", qPrintable(filename));
   }
 
+  check4boxes();
   this->showXaxis();
+}
+
+void MainWindow::check4boxes()
+{
+  if (showLabelValueBox->isChecked())
+    onValueBoxChanged(Qt::Checked);
+
+  if (linkAxesBox->isChecked())
+    onLinkAxesBoxChanged(Qt::Checked);
 }
 
 void MainWindow::onCurveStyleChanged(QString style)

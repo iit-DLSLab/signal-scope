@@ -112,6 +112,7 @@ protected:
   class Internal;
   Internal* mInternal;
   void showXaxis();
+  void check4boxes();
 };
 
 #endif
