@@ -5,6 +5,7 @@
 #include <qwt/qwt_interval.h>
 #include <qwt/qwt_system_clock.h>
 #include <qwt/qwt_plot_curve.h>
+#include <qwt/qwt_plot_zoomer.h>
 
 class QwtPlotCurve;
 class QwtPlotMarker;
@@ -43,7 +44,7 @@ public:
     double timeWindow();
 
     void setEndTime(double endTime);
-    void moveCanvas(int dx, int dy);
+    void moveCanvas(int dx, int dy, QPoint pos);
 
     void setBackgroundColor(QString color);
 
@@ -59,9 +60,13 @@ public:
 
     double getExtent();
     void setExtent(double extent);
-    
-signals:
 
+private slots:
+    void onMovedMyCanvas(int, int, QPoint);
+
+signals:
+    void movedMyCanvasSignal(int, int, QPoint);
+    void anotherCanvasMovedSignal(int, int, QPoint);
     void syncXAxisScale(double x0, double x1);
 
 public Q_SLOTS:
@@ -74,12 +79,11 @@ protected:
 
 private:
     void initBackground();
-
+    QwtPlotZoomer* zoomer;
     QwtPlotMarker *d_origin;
     QwtPlotMarker *d_marker;
     QwtPlotGrid *d_grid;
     MyMagnifier *mMagnifier;
-
     bool mStopped;
     bool mAxisSyncRequired;
     int mColorMode;
@@ -87,6 +91,29 @@ private:
     AlignMode mAlignMode;
 
     QMap<SignalData*, QwtPlotCurve*> mSignals;
+};
+
+class MyPanner : public QObject
+{
+    Q_OBJECT
+public:
+    MyPanner(Plot* plot);
+    QPoint mInitialPos;
+    bool mEnabled;
+    int mMouseButton;
+    int mKeyboardButton;
+    Plot* mPlot;
+    bool eventFilter( QObject *object, QEvent *event );
+    void moveCanvas( int dx, int dy );
+    void widgetMousePressEvent( QMouseEvent *mouseEvent );
+    void widgetMouseMoveEvent( QMouseEvent *mouseEvent );
+    void widgetMouseReleaseEvent( QMouseEvent *mouseEvent );
+
+signals:
+    void movedCanvas(int, int, QPoint);
+
+public slots:
+    void moveCanvas( int dx, int dy, QPoint pos );
 };
 
 #endif

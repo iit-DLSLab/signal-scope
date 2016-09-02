@@ -11,7 +11,6 @@
 #include <qwt/qwt_painter.h>
 #include <qwt/qwt_scale_engine.h>
 #include <qwt/qwt_scale_draw.h>
-#include <qwt/qwt_plot_zoomer.h>
 #include <qwt/qwt_plot_panner.h>
 #include <qwt/qwt_plot_magnifier.h>
 #include <qwt/qwt_text.h>
@@ -22,128 +21,6 @@
 #include <cassert>
 
 #define DEFAULT_CURVE_STYLE QwtPlotCurve::Dots
-
-class MyPanner : public QObject
-{
-public:
-
-  QPoint mInitialPos;
-  bool mEnabled;
-  int mMouseButton;
-  int mKeyboardButton;
-  Plot* mPlot;
-
-  MyPanner(Plot* plot) : QObject(plot)
-  {
-    mEnabled = false;
-    mMouseButton = Qt::LeftButton;
-    mKeyboardButton = Qt::NoButton;
-    mPlot = plot;
-    mPlot->canvas()->installEventFilter(this);
-  }
-
-  bool eventFilter( QObject *object, QEvent *event )
-  {
-    switch ( event->type() )
-    {
-      case QEvent::MouseButtonPress:
-      {
-        widgetMousePressEvent( ( QMouseEvent * )event );
-        break;
-      }
-      case QEvent::MouseMove:
-      {
-        widgetMouseMoveEvent( ( QMouseEvent * )event );
-        break;
-      }
-      case QEvent::MouseButtonRelease:
-      {
-        widgetMouseReleaseEvent( ( QMouseEvent * )event );
-        break;
-      }
-      default:
-        break;
-    }
-
-    return false;
-  }
-
-  void moveCanvas( int dx, int dy )
-  {
-    if ( dx == 0 && dy == 0 )
-        return;
-
-    if (!mPlot->isStopped())
-      dx = 0;
-
-    for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ )
-    {
-      const QwtScaleMap map = mPlot->canvasMap( axis );
-
-      #if QWT_VERSION < 0x060100
-      const QwtScaleDiv* scaleDiv = mPlot->axisScaleDiv( axis );
-      #else
-      const QwtScaleDiv* scaleDiv = &mPlot->axisScaleDiv( axis );
-      #endif
-
-      const double p1 = map.transform( scaleDiv->lowerBound() );
-      const double p2 = map.transform( scaleDiv->upperBound() );
-
-      double d1, d2;
-      if ( axis == QwtPlot::xBottom || axis == QwtPlot::xTop )
-      {
-        d1 = map.invTransform( p1 - dx );
-        d2 = map.invTransform( p2 - dx );
-      }
-      else
-      {
-        d1 = map.invTransform( p1 - dy );
-        d2 = map.invTransform( p2 - dy );
-      }
-      mPlot->setAxisScale( axis, d1, d2 );
-    }
-
-    mPlot->flagAxisSyncRequired();
-    mPlot->replot();
-  }
-
-
-  void widgetMousePressEvent( QMouseEvent *mouseEvent )
-  {
-    if (mouseEvent->button() != mMouseButton)
-    {
-      return;
-    }
-
-    if ((mouseEvent->modifiers() & Qt::KeyboardModifierMask) != (mKeyboardButton & Qt::KeyboardModifierMask))
-    {
-      return;
-    }
-
-
-    mInitialPos = mouseEvent->pos();
-    mEnabled = true;
-  }
-
-  void widgetMouseMoveEvent( QMouseEvent *mouseEvent )
-  {
-    if (!mEnabled)
-      return;
-
-    QPoint pos = mouseEvent->pos();
-    if (pos != mInitialPos)
-    {
-      moveCanvas(pos.x() - mInitialPos.x(), pos.y() - mInitialPos.y());
-      mInitialPos = mouseEvent->pos();
-    }
-  }
-
-  void widgetMouseReleaseEvent( QMouseEvent *mouseEvent )
-  {
-    mEnabled = false;
-  }
-
-};
 
 class MyScaleDraw : public QwtScaleDraw
 {
@@ -210,6 +87,125 @@ protected:
 
 };
 
+MyPanner::MyPanner(Plot* plot) : QObject(plot)
+{
+  mEnabled = false;
+  mMouseButton = Qt::LeftButton;
+  mKeyboardButton = Qt::NoButton;
+  mPlot = plot;
+  mPlot->canvas()->installEventFilter(this);
+}
+
+bool MyPanner::eventFilter( QObject *object, QEvent *event )
+{
+  switch ( event->type() )
+  {
+    case QEvent::MouseButtonPress:
+    {
+      widgetMousePressEvent( ( QMouseEvent * )event );
+      break;
+    }
+    case QEvent::MouseMove:
+    {
+      widgetMouseMoveEvent( ( QMouseEvent * )event );
+      break;
+    }
+    case QEvent::MouseButtonRelease:
+    {
+      widgetMouseReleaseEvent( ( QMouseEvent * )event );
+      break;
+    }
+    default:
+      break;
+  }
+
+  return false;
+}
+
+void MyPanner::moveCanvas(int dx, int dy, QPoint pos)
+{
+  if (pos != mInitialPos)
+  {
+    moveCanvas(dx, dy);
+    mInitialPos = pos; 
+  }
+}
+
+void MyPanner::moveCanvas( int dx, int dy )
+{
+  if ( dx == 0 && dy == 0 )
+      return;
+
+  if (!mPlot->isStopped())
+    dx = 0;
+
+  for ( int axis = 0; axis < QwtPlot::axisCnt; axis++ )
+  {
+    const QwtScaleMap map = mPlot->canvasMap( axis );
+
+    #if QWT_VERSION < 0x060100
+    const QwtScaleDiv* scaleDiv = mPlot->axisScaleDiv( axis );
+    #else
+    const QwtScaleDiv* scaleDiv = &mPlot->axisScaleDiv( axis );
+    #endif
+
+    const double p1 = map.transform( scaleDiv->lowerBound() );
+    const double p2 = map.transform( scaleDiv->upperBound() );
+
+    double d1, d2;
+    if ( axis == QwtPlot::xBottom || axis == QwtPlot::xTop )
+    {
+      d1 = map.invTransform( p1 - dx );
+      d2 = map.invTransform( p2 - dx );
+    }
+    else
+    {
+      d1 = map.invTransform( p1 - dy );
+      d2 = map.invTransform( p2 - dy );
+    }
+    mPlot->setAxisScale( axis, d1, d2 );
+  }
+
+  mPlot->flagAxisSyncRequired();
+  mPlot->replot();
+
+}
+
+void MyPanner::widgetMousePressEvent( QMouseEvent *mouseEvent )
+{
+  if (mouseEvent->button() != mMouseButton)
+  {
+    return;
+  }
+
+  if ((mouseEvent->modifiers() & Qt::KeyboardModifierMask) != (mKeyboardButton & Qt::KeyboardModifierMask))
+  {
+    return;
+  }
+
+
+  mInitialPos = mouseEvent->pos();
+  mEnabled = true;
+}
+
+void MyPanner::widgetMouseMoveEvent( QMouseEvent *mouseEvent )
+{
+  if (!mEnabled)
+    return;
+
+  QPoint pos = mouseEvent->pos();
+  int dx = pos.x() - mInitialPos.x();
+  int dy = pos.y() - mInitialPos.y();
+  moveCanvas(dx, dy, pos);
+  emit movedCanvas(dx,dy,pos);
+  mInitialPos = mouseEvent->pos();
+
+}
+
+void MyPanner::widgetMouseReleaseEvent( QMouseEvent *mouseEvent )
+{
+  mEnabled = false;
+}
 Plot::Plot(QWidget *parent):
   QwtPlot(parent),
   d_origin(0),
@@ -255,8 +251,6 @@ Plot::Plot(QWidget *parent):
 
 #endif
 
-
-
   plotLayout()->setAlignCanvasToScales(true);
 
   setAxisAutoScale(QwtPlot::xBottom, false);
@@ -270,7 +264,7 @@ Plot::Plot(QWidget *parent):
 
   initBackground();
 
-  QwtPlotZoomer* zoomer = new MyZoomer(this);
+  zoomer = new MyZoomer(this);
   zoomer->setMousePattern(QwtEventPattern::QwtEventPattern::MouseSelect1, Qt::LeftButton, Qt::ShiftModifier);
 
   // disable MouseSelect3 action of the zoomer
@@ -287,11 +281,23 @@ Plot::Plot(QWidget *parent):
   zoomer->setTrackerPen(c);
 
   this->setMinimumHeight(50);
+  this->connect(panner,SIGNAL(movedCanvas(int, int, QPoint)), this, SLOT(onMovedMyCanvas(int, int, QPoint)));
+  this->connect(this,SIGNAL(anotherCanvasMovedSignal(int,int,QPoint)),panner,SLOT(moveCanvas(int,int,QPoint)));
 }
 
 Plot::~Plot()
 {
 
+}
+
+void Plot::onMovedMyCanvas(int dx, int dy, QPoint pos)
+{
+  emit movedMyCanvasSignal(dx,dy,pos);
+}
+
+void Plot::moveCanvas(int dx, int dy, QPoint pos)
+{
+  emit anotherCanvasMovedSignal(dx,dy,pos);
 }
 
 void Plot::addSignal(SignalData* signalData, QColor color)

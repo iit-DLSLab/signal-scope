@@ -135,15 +135,22 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent)
   frameLayout->addWidget(timeWindowSpin);
   mInternal->toolBar->addWidget(timeWindowWidget);
 
+  mInternal->toolBar->addSeparator();
   showLabelValueBox = new QCheckBox("Show all values",this);
   showLabelValueBox->setLayoutDirection(Qt::RightToLeft);
   mInternal->toolBar->addWidget(showLabelValueBox);
+
+  mInternal->toolBar->addSeparator();
+  linkAxesBox = new QCheckBox("Link x axis",this);
+  linkAxesBox->setLayoutDirection(Qt::RightToLeft);
+  mInternal->toolBar->addWidget(linkAxesBox);
 
   this->connect(showLabelValueBox,SIGNAL(stateChanged(int)), this, SLOT(onValueBoxChanged(int)));
   this->connect(curveStyleCombo, SIGNAL(currentIndexChanged(const QString&)), SLOT(onCurveStyleChanged(QString)));
   this->connect(pointSizeSpin, SIGNAL(valueChanged(int)), SLOT(onPointSizeChanged(int)));
   this->connect(alignCombo, SIGNAL(currentIndexChanged(const QString&)), SLOT(onAlignModeChanged(QString)));
   this->connect(timeWindowSpin, SIGNAL(valueChanged(double)), SLOT(onTimeWindowChanged(double)));
+  this->connect(linkAxesBox, SIGNAL(stateChanged(int)), SLOT(onLinkAxesBoxChanged(int)));
 
   mRedrawTimer = new QTimer(this);
   //mRedrawTimer->setSingleShot(true);
@@ -375,6 +382,25 @@ void MainWindow::onAutomaticResize()
     {
       plot->rescalingTimer->stop();
     }
+  }
+}
+
+void MainWindow::onLinkAxesBoxChanged(int state)
+{
+
+  if (state == Qt::Checked)
+  {
+    foreach(PlotWidget *plot, mPlots)
+    {
+      this->connect(plot, SIGNAL(movedCanvasSignal(int, int, QPoint)), this, SLOT(onMoveCanvas(int,int,QPoint)));
+    }
+  }
+  else
+  {
+    foreach(PlotWidget *plot, mPlots)
+    {
+      this->disconnect(plot, SIGNAL(movedCanvasSignal(int, int, QPoint)), 0, 0);
+    }    
   }
 }
 
@@ -718,6 +744,14 @@ PlotWidget* MainWindow::addPlot()
     plot->stop();
 
   return plot;
+}
+
+void MainWindow::onMoveCanvas(int dx,int dy,QPoint pos)
+{
+  foreach (PlotWidget* plot, mPlots)
+  {
+    plot->onMovedAnotherCanvas(dx,dy,pos);
+  }
 }
 
 void MainWindow::onAddSignalToPlot(PlotWidget* plot)
