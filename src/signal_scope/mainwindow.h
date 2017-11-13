@@ -54,6 +54,7 @@ public slots:
   void onCurveStyleChanged(QString style);
   void onValueBoxChanged(int state);
   void onReloadPythonScript();
+  void onTimeWindowChanged(double timeWindow);
   
   PlotWidget* addPlot();
   void loadPythonScript(const QString& filename);
