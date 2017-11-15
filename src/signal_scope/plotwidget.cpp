@@ -389,7 +389,7 @@ void PlotWidget::onResetYAxisScale()
   }
   else
   {
-    double margin = std::abs(area.height()*0.1);
+    double margin = std::abs(area.top()*0.1);
     area.setTop(area.top() - margin);
     area.setBottom(area.bottom() + margin);
   }
