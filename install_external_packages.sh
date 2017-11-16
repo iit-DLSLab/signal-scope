@@ -7,9 +7,8 @@ python_args="-DPYTHON_INCLUDE_DIR:PATH=${PID} -DPYTHON_INCLUDE_DIR2:PATH=${PID} 
 
 function install_PythonQt
 {
-	git clone https://github.com/commontk/PythonQt.git
+	git clone -b patched-6 https://github.com/commontk/PythonQt.git
 	cd PythonQt
-	git checkout 00e6c6b2
 	cd build
 	cmake ${default_cmake_args} -DPythonQt_Wrap_Qtcore:BOOL=ON -DPythonQt_Wrap_Qtgui:BOOL=ON -DPythonQt_Wrap_Qtuitools:BOOL=ON ../.
 	make
@@ -31,8 +30,18 @@ function install_ctkPythonConsole
 }
 
 echo "Installing the dependencies for signal-scope"
+
+# Removing the folder if it's already existing for some reason
+if [ -d PythonQt ]; then
+	rm -rf PythonQt
+fi
 install_PythonQt
-install_ctkPythonConsole
 rm -rf PythonQt
+
+# Removing the folder if it's already existing for some reason
+if [ -d ctkPythonConsole ]; then
+	rm -rf ctkPythonConsole
+fi
+install_ctkPythonConsole
 rm -rf ctkPythonConsole
 
