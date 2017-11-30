@@ -48,8 +48,8 @@ if(USE_PYTHON)
   find_package(CTKPythonConsole REQUIRED)
 
   include_directories(${PYTHON_INCLUDE_DIRS})
-  include_directories(/usr/local/include/ctkPythonConsole/)
-  include_directories(/usr/local/include/PythonQt/)
+  include_directories(${CTK_PYTHONCONSOLE_INCLUDE_DIRS})
+  include_directories(${PYTHONQT_INCLUDE_DIR})
 
   set(python_deps ${PYTHON_LIBRARIES})
   set(python_moc_srcs

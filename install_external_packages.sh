@@ -7,13 +7,20 @@ python_args="-DPYTHON_INCLUDE_DIR:PATH=${PID} -DPYTHON_INCLUDE_DIR2:PATH=${PID} 
 
 function install_PythonQt
 {
-	git clone -b patched-6 https://github.com/commontk/PythonQt.git
-	cd PythonQt
-	cd build
-	cmake ${default_cmake_args} -DPythonQt_Wrap_Qtcore:BOOL=ON -DPythonQt_Wrap_Qtgui:BOOL=ON -DPythonQt_Wrap_Qtuitools:BOOL=ON ../.
-	make
-	sudo make install
-	cd ../../
+        # We try to install with APT and manual fix to the "missing header" bug
+        # see https://bugs.launchpad.net/ubuntu/+source/pythonqt/+bug/1603273
+        sudo apt-get install libpythonqt-dev
+        wget https://raw.githubusercontent.com/commontk/PythonQt/patched-6/src/PythonQtUtils.h
+        sudo mv PythonQtUtils.h /usr/include/PythonQt/PythonQtUtils.h
+
+	# Manual build and install (somehow it does not work in 16.04)
+	#git clone -b patched-6 https://github.com/commontk/PythonQt.git
+	#cd PythonQt
+	#cd build
+	#cmake ${default_cmake_args} -DPythonQt_Wrap_Qtcore:BOOL=ON -DPythonQt_Wrap_Qtgui:BOOL=ON -DPythonQt_Wrap_Qtuitools:BOOL=ON ../.
+	#make
+	#sudo make install
+	#cd ../../
 }
 
 function install_ctkPythonConsole
