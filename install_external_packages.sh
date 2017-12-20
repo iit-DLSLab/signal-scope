@@ -7,11 +7,12 @@ python_args="-DPYTHON_INCLUDE_DIR:PATH=${PID} -DPYTHON_INCLUDE_DIR2:PATH=${PID} 
 
 function install_PythonQt
 {
+
+        sudo apt-get install libpythonqt-dev
         # We try to install with APT and manual fix to the "missing header" bug
         # see https://bugs.launchpad.net/ubuntu/+source/pythonqt/+bug/1603273
-        sudo apt-get install libpythonqt-dev
-        wget https://raw.githubusercontent.com/commontk/PythonQt/patched-6/src/PythonQtUtils.h
-        sudo mv PythonQtUtils.h /usr/include/PythonQt/PythonQtUtils.h
+        # wget https://raw.githubusercontent.com/commontk/PythonQt/patched-6/src/PythonQtUtils.h
+        # sudo mv PythonQtUtils.h /usr/include/PythonQt/PythonQtUtils.h
 
 	# Manual build and install (somehow it does not work in 16.04)
 	#git clone -b patched-6 https://github.com/commontk/PythonQt.git
